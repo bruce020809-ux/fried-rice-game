@@ -2,859 +2,99 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>炒飯翻鍋小遊戲</title>
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, "Microsoft JhengHei", sans-serif;
-  background: #f7b267;
-  user-select: none;
-}
-
-#app {
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.35), transparent 28%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.28), transparent 24%),
-    linear-gradient(180deg, #ffd7a8 0%, #f7a95c 55%, #d98232 100%);
-}
-
-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-}
-
-.hud {
-  position: absolute;
-  top: max(14px, env(safe-area-inset-top));
-  left: 14px;
-  right: 14px;
-  z-index: 20;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-  pointer-events: none;
-}
-
-.card {
-  color: #3b1d08;
-  background: rgba(255, 255, 255, 0.86);
-  border: 3px solid #7c3f14;
-  border-radius: 18px;
-  box-shadow: 0 6px 0 rgba(85, 38, 9, 0.32);
-  padding: 10px 14px;
-  backdrop-filter: blur(8px);
-}
-
-.name {
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.desc {
-  margin-top: 5px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.45;
-}
-
-.stats {
-  min-width: 145px;
-  text-align: right;
-  font-weight: 900;
-}
-
-.score {
-  font-size: 24px;
-  line-height: 1;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  margin-top: 6px;
-  font-size: 13px;
-}
-
-.meter {
-  position: absolute;
-  left: 50%;
-  bottom: max(24px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  width: min(480px, calc(100vw - 34px));
-  z-index: 15;
-  pointer-events: none;
-}
-
-.bar-wrap {
-  height: 18px;
-  border: 3px solid #5b2a0a;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.16);
-}
-
-.bar {
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, #fff176, #ff9800, #f4511e);
-  border-radius: 999px;
-  transition: width 0.08s linear;
-}
-
-.tip {
-  margin-top: 8px;
-  text-align: center;
-  color: #3b1d08;
-  font-size: 13px;
-  font-weight: 900;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  background: rgba(75, 34, 7, 0.15);
-}
-
-.menu {
-  width: min(440px, 92vw);
-  color: #3b1d08;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.92);
-  border: 4px solid #7c3f14;
-  border-radius: 28px;
-  box-shadow: 0 10px 0 rgba(85, 38, 9, 0.35);
-  padding: 24px 20px 22px;
-  backdrop-filter: blur(10px);
-}
-
-.menu h1 {
-  margin: 0 0 10px;
-  font-size: 34px;
-  line-height: 1.1;
-}
-
-.menu p {
-  margin: 8px 0;
-  font-size: 15px;
-  line-height: 1.55;
-  font-weight: 800;
-}
-
-.result {
-  margin: 14px auto 4px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.result div {
-  background: rgba(255, 216, 128, 0.55);
-  border: 2px solid rgba(124, 63, 20, 0.4);
-  border-radius: 16px;
-  padding: 10px 8px;
-  font-weight: 900;
-}
-
-.result span {
-  display: block;
-  font-size: 22px;
-  margin-top: 4px;
-}
-
-button {
-  margin-top: 16px;
-  border: 0;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ff9e2c, #ef6c00);
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 900;
-  padding: 13px 30px;
-  cursor: pointer;
-  box-shadow: 0 7px 0 #9f3f00;
-}
-
-button:active {
-  transform: translateY(4px);
-  box-shadow: 0 3px 0 #9f3f00;
-}
-
-.flash {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  z-index: 18;
-  transform: translate(-50%, -50%);
-  color: #a83200;
-  font-size: 30px;
-  font-weight: 1000;
-  opacity: 0;
-  text-shadow:
-    2px 2px 0 #fff,
-    -2px 2px 0 #fff,
-    2px -2px 0 #fff,
-    -2px -2px 0 #fff;
-  pointer-events: none;
-}
-
-.flash.show {
-  animation: flashText 0.55s ease-out;
-}
-
-@keyframes flashText {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -20%) scale(0.8) rotate(-4deg);
-  }
-  35% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.16) rotate(2deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -85%) scale(1) rotate(0deg);
-  }
-}
-
-@media (max-width: 560px) {
-  .hud {
-    left: 10px;
-    right: 10px;
-    gap: 8px;
-  }
-
-  .card {
-    padding: 8px 10px;
-    border-radius: 15px;
-    border-width: 2px;
-  }
-
-  .name {
-    font-size: 16px;
-  }
-
-  .desc {
-    font-size: 11px;
-  }
-
-  .stats {
-    min-width: 124px;
-  }
-
-  .score {
-    font-size: 20px;
-  }
-
-  .row {
-    font-size: 11px;
-    gap: 9px;
-  }
-
-  .menu h1 {
-    font-size: 30px;
-  }
-
-  .menu p {
-    font-size: 14px;
-  }
-
-  .flash {
-    font-size: 25px;
-  }
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,"Microsoft JhengHei",sans-serif;background:#ffd089;user-select:none}
+#app{position:relative;width:100vw;height:100dvh;overflow:hidden;background:radial-gradient(circle at 18% 14%,rgba(255,255,255,.55),transparent 22%),radial-gradient(circle at 84% 18%,rgba(255,255,255,.36),transparent 20%),linear-gradient(180deg,#ffe1aa 0%,#ffc06f 50%,#f09240 100%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;z-index:20;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}
+.card{background:#fffaf0;border:4px solid #6b3a16;border-radius:24px;color:#3a1d08;padding:11px 14px;box-shadow:0 8px 0 rgba(107,58,22,.26)}
+.title{font-size:18px;font-weight:1000;line-height:1.12}.desc{margin-top:6px;font-size:12px;line-height:1.45;font-weight:900}.stats{min-width:148px;text-align:right}.score{font-size:27px;line-height:1;font-weight:1000}.row{display:flex;justify-content:space-between;gap:12px;margin-top:7px;font-size:12px;font-weight:1000}
+.meter{position:absolute;z-index:18;left:50%;bottom:max(26px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(620px,calc(100vw - 32px));pointer-events:none}
+.bar-bg{height:28px;border:4px solid #6b3a16;border-radius:999px;background:#fff7de;overflow:hidden;box-shadow:0 6px 0 rgba(107,58,22,.22),inset 0 2px 8px rgba(0,0,0,.12)}
+.bar{height:100%;width:70%;border-radius:999px;background:linear-gradient(90deg,#fff176 0%,#ffc234 45%,#ff8a2a 72%,#f4511e 100%);transition:width .08s linear}
+.tip{margin-top:9px;text-align:center;font-size:14px;font-weight:1000;color:#3a1d08;text-shadow:0 2px 0 rgba(255,255,255,.6)}
+.overlay{position:absolute;inset:0;z-index:40;display:grid;place-items:center;padding:18px;background:rgba(93,47,12,.12)}
+.menu{width:min(460px,92vw);text-align:center;color:#3a1d08;background:#fffaf0;border:4px solid #6b3a16;border-radius:30px;box-shadow:0 12px 0 rgba(107,58,22,.28);padding:26px 22px 22px}
+.menu h1{margin:0 0 10px;font-size:34px;line-height:1.08}.menu p{margin:8px 0;font-size:15px;line-height:1.55;font-weight:900}
+.result{margin:16px 0 4px;display:grid;grid-template-columns:1fr 1fr;gap:10px}.result div{background:#ffe6aa;border:2px solid rgba(107,58,22,.4);border-radius:18px;padding:10px 8px;font-weight:1000}.result span{display:block;margin-top:5px;font-size:24px}
+button{margin-top:15px;border:0;border-radius:20px;padding:13px 30px;color:white;font-size:20px;font-weight:1000;background:linear-gradient(180deg,#ff9f2d,#ef6d00);box-shadow:0 7px 0 #a94900;cursor:pointer}
+button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
+.flash{position:absolute;z-index:26;left:50%;top:41%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;color:#b63600;font-size:34px;font-weight:1000;text-shadow:3px 3px 0 #fff,-3px 3px 0 #fff,3px -3px 0 #fff,-3px -3px 0 #fff,0 5px 0 rgba(107,58,22,.18)}
+.flash.show{animation:flash .58s ease-out}
+@keyframes flash{0%{opacity:0;transform:translate(-50%,-20%) scale(.82) rotate(-6deg)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}100%{opacity:0;transform:translate(-50%,-88%) scale(1) rotate(0deg)}}
+@media(max-width:600px){.hud{top:max(10px,env(safe-area-inset-top));left:10px;right:10px;gap:8px}.card{padding:9px 11px;border-width:3px;border-radius:20px}.title{font-size:16px}.desc{font-size:11px}.stats{min-width:132px}.score{font-size:23px}.row{font-size:11px;gap:9px}.tip{font-size:13px}.menu h1{font-size:30px}.menu p{font-size:14px}.flash{font-size:28px}}
 </style>
 </head>
 <body>
 <div id="app">
-  <canvas id="canvas"></canvas>
-
-  <div class="hud">
-    <div class="card">
-      <div class="name">炒飯翻鍋</div>
-      <div class="desc">點鍋子翻炒<br>掉飯越少分數越高</div>
-    </div>
-    <div class="card stats">
-      <div class="score"><span id="score">0</span> 分</div>
-      <div class="row"><span>掉飯</span><span id="lost">0</span></div>
-      <div class="row"><span>時間</span><span><span id="time">30</span>s</span></div>
-      <div class="row"><span>最佳</span><span id="best">0</span></div>
-    </div>
-  </div>
-
-  <div class="flash" id="flash">漂亮翻鍋！</div>
-
-  <div class="meter">
-    <div class="bar-wrap">
-      <div class="bar" id="bar"></div>
-    </div>
-    <div class="tip" id="tip">節奏點擊，火候會穩，飯比較不會掉</div>
-  </div>
-
-  <div class="overlay" id="overlay">
-    <div class="menu" id="menu">
-      <h1>炒飯翻鍋</h1>
-      <p>一直點鍋子讓炒飯飛起來。</p>
-      <p>太快亂點會噴飯，穩定節奏會加更多分。</p>
-      <p>最後掉出鍋子的飯越少，評價越高。</p>
-      <button id="start">開始遊戲</button>
-    </div>
-  </div>
+<canvas id="game"></canvas>
+<div class="hud">
+<div class="card"><div class="title">卡通炒飯翻鍋</div><div class="desc">點鍋子翻炒<br>節奏穩定飯比較不會掉</div></div>
+<div class="card stats"><div class="score"><span id="score">0</span> 分</div><div class="row"><span>掉飯</span><span id="lost">0</span></div><div class="row"><span>時間</span><span><span id="time">30</span>s</span></div><div class="row"><span>最佳</span><span id="best">0</span></div></div>
 </div>
-
+<div class="flash" id="flash">漂亮翻鍋！</div>
+<div class="meter"><div class="bar-bg"><div class="bar" id="bar"></div></div><div class="tip" id="tip">等飯落回鍋裡再點，物理會最穩</div></div>
+<div class="overlay" id="overlay"><div class="menu" id="menu"><h1>卡通炒飯翻鍋</h1><p>點鍋子讓炒飯整團拋起來，再落回鍋裡。</p><p>不要一直亂點，等飯快回鍋再點，分數最高。</p><p>飯掉越少，最後評價越高。</p><button id="startBtn">開始遊戲</button></div></div>
+</div>
 <script>
-const canvas = document.getElementById("canvas")
-const ctx = canvas.getContext("2d")
-const scoreEl = document.getElementById("score")
-const lostEl = document.getElementById("lost")
-const timeEl = document.getElementById("time")
-const bestEl = document.getElementById("best")
-const barEl = document.getElementById("bar")
-const tipEl = document.getElementById("tip")
-const overlay = document.getElementById("overlay")
-const menu = document.getElementById("menu")
-const startBtn = document.getElementById("start")
-const flash = document.getElementById("flash")
-
-let w = 0
-let h = 0
-let dpr = 1
-let running = false
-let score = 0
-let lost = 0
-let timeLeft = 30
-let best = Number(localStorage.getItem("friedRiceBest") || 0)
-let rice = []
-let splats = []
-let steam = []
-let sparks = []
-let lastTap = 0
-let heat = 52
-let panKick = 0
-let panAngle = 0
-let panLift = 0
-let combo = 0
-let timer = null
-let raf = 0
-let lastFrame = 0
-
-bestEl.textContent = best
-
-function resize() {
-  dpr = Math.min(window.devicePixelRatio || 1, 2)
-  w = window.innerWidth
-  h = window.innerHeight
-  canvas.width = Math.floor(w * dpr)
-  canvas.height = Math.floor(h * dpr)
-  canvas.style.width = w + "px"
-  canvas.style.height = h + "px"
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-}
-
-function panBase() {
-  return {
-    x: w / 2,
-    y: h - Math.max(180, Math.min(230, h * 0.24)),
-    scale: Math.min(1.08, Math.max(0.78, w / 430))
-  }
-}
-
-function resetGame() {
-  score = 0
-  lost = 0
-  timeLeft = 30
-  heat = 52
-  panKick = 0
-  panAngle = 0
-  panLift = 0
-  combo = 0
-  rice = []
-  splats = []
-  steam = []
-  sparks = []
-  lastTap = 0
-  scoreEl.textContent = score
-  lostEl.textContent = lost
-  timeEl.textContent = timeLeft
-  barEl.style.width = heat + "%"
-  const p = panBase()
-  const amount = Math.max(26, Math.floor(w / 12))
-  for (let i = 0; i < amount; i++) addRice(p.x + rand(-74, 74) * p.scale, p.y + rand(-16, 13) * p.scale, true)
-  for (let i = 0; i < 16; i++) addSteam()
-}
-
-function startGame() {
-  overlay.style.display = "none"
-  resetGame()
-  running = true
-  lastFrame = performance.now()
-  clearInterval(timer)
-  timer = setInterval(() => {
-    if (!running) return
-    timeLeft -= 1
-    timeEl.textContent = timeLeft
-    if (timeLeft <= 0) finishGame()
-  }, 1000)
-  cancelAnimationFrame(raf)
-  raf = requestAnimationFrame(loop)
-}
-
-function finishGame() {
-  running = false
-  clearInterval(timer)
-  cancelAnimationFrame(raf)
-  const keepBonus = Math.max(0, rice.length * 4)
-  const lostPenalty = lost * 22
-  const finalScore = Math.max(0, score + keepBonus - lostPenalty)
-  score = finalScore
-  scoreEl.textContent = score
-  if (score > best) {
-    best = score
-    localStorage.setItem("friedRiceBest", String(best))
-    bestEl.textContent = best
-  }
-  const rank = getRank(score, lost)
-  menu.innerHTML = `
-    <h1>遊戲結束</h1>
-    <p>${rank}</p>
-    <div class="result">
-      <div>分數<span>${score}</span></div>
-      <div>掉飯<span>${lost}</span></div>
-      <div>鍋內剩飯<span>${rice.length}</span></div>
-      <div>最佳<span>${best}</span></div>
-    </div>
-    <button id="again">再玩一次</button>
-  `
-  overlay.style.display = "grid"
-  document.getElementById("again").addEventListener("click", startGame)
-}
-
-function getRank(s, l) {
-  if (s >= 900 && l <= 5) return "神級快炒師，飯幾乎都留在鍋裡"
-  if (s >= 650 && l <= 10) return "高級炒飯師，翻鍋很穩"
-  if (s >= 420 && l <= 18) return "不錯，已經有快炒店水準"
-  if (l >= 28) return "飯灑太多了，節奏要穩一點"
-  return "還可以，再練一下翻鍋節奏"
-}
-
-function addRice(x, y, calm) {
-  const type = Math.floor(Math.random() * 5)
-  rice.push({
-    x,
-    y,
-    vx: calm ? rand(-0.6, 0.6) : rand(-2, 2),
-    vy: calm ? rand(-0.7, 0.2) : rand(-5, -2),
-    r: rand(4.2, 6.8),
-    a: rand(0, Math.PI * 2),
-    spin: rand(-0.18, 0.18),
-    type,
-    alive: true
-  })
-}
-
-function addSteam() {
-  const p = panBase()
-  steam.push({
-    x: p.x + rand(-95, 95) * p.scale,
-    y: p.y - rand(10, 55) * p.scale,
-    vy: rand(-0.35, -0.85),
-    size: rand(10, 25),
-    alpha: rand(0.18, 0.34)
-  })
-}
-
-function addSpark(x, y) {
-  sparks.push({
-    x,
-    y,
-    vx: rand(-1.2, 1.2),
-    vy: rand(-3.5, -1.2),
-    life: rand(18, 34),
-    max: 34,
-    size: rand(2, 4)
-  })
-}
-
-function tap(x, y) {
-  if (!running) return
-  const p = panBase()
-  const dx = x - p.x
-  const dy = y - p.y
-  const hitW = 180 * p.scale
-  const hitH = 120 * p.scale
-  if (Math.abs(dx) > hitW || Math.abs(dy) > hitH) return
-
-  const now = performance.now()
-  const gap = lastTap ? now - lastTap : 260
-  lastTap = now
-
-  panKick = 1
-  panLift = 34
-  panAngle = -0.18
-
-  let quality = 0
-  if (gap >= 150 && gap <= 430) {
-    quality = 1
-    combo += 1
-    heat = clamp(heat + 7, 0, 100)
-    score += 18 + Math.min(combo * 2, 22)
-    tipEl.textContent = "節奏很好，飯比較穩"
-    if (combo % 4 === 0) showFlash("漂亮翻鍋！")
-  } else if (gap < 95) {
-    quality = -1
-    combo = 0
-    heat = clamp(heat + 12, 0, 100)
-    score += 5
-    tipEl.textContent = "太快了，容易把飯甩出去"
-  } else {
-    quality = 0
-    combo = 0
-    heat = clamp(heat - 4, 0, 100)
-    score += 9
-    tipEl.textContent = "節奏斷掉了，火候會不穩"
-  }
-
-  for (const item of rice) {
-    item.vy -= rand(4.6, 7.2) * p.scale
-    item.vx += rand(-2.0, 2.0) * p.scale
-    item.spin += rand(-0.18, 0.18)
-  }
-
-  const dropChance = quality === 1 ? 0.07 : quality === -1 ? 0.38 : 0.22
-  if (Math.random() < dropChance + heat / 420) tossRice(p, quality)
-  for (let i = 0; i < 7; i++) addSpark(p.x + rand(-55, 55) * p.scale, p.y + rand(35, 58) * p.scale)
-
-  scoreEl.textContent = score
-  barEl.style.width = heat + "%"
-}
-
-function tossRice(p, quality) {
-  const count = quality === -1 ? 3 : 1
-  for (let n = 0; n < count; n++) {
-    if (rice.length <= 8) return
-    const item = rice[Math.floor(Math.random() * rice.length)]
-    const side = Math.random() < 0.5 ? -1 : 1
-    item.vx = side * rand(4.1, 7.2) * p.scale
-    item.vy = rand(-8.5, -4.8) * p.scale
-  }
-}
-
-function showFlash(text) {
-  flash.textContent = text
-  flash.classList.remove("show")
-  void flash.offsetWidth
-  flash.classList.add("show")
-}
-
-function loop(t) {
-  if (!running) return
-  const dt = Math.min(2, (t - lastFrame) / 16.67)
-  lastFrame = t
-  update(dt)
-  draw()
-  raf = requestAnimationFrame(loop)
-}
-
-function update(dt) {
-  const p = panBase()
-  const gravity = 0.28 * dt
-  heat = clamp(heat - 0.018 * dt, 0, 100)
-  panKick *= Math.pow(0.84, dt)
-  panLift *= Math.pow(0.82, dt)
-  panAngle *= Math.pow(0.82, dt)
-
-  for (let i = rice.length - 1; i >= 0; i--) {
-    const item = rice[i]
-    item.vy += gravity
-    item.vx *= Math.pow(0.994, dt)
-    item.x += item.vx * dt
-    item.y += item.vy * dt
-    item.a += item.spin * dt
-
-    const panX = p.x
-    const panY = p.y - panLift * 0.4
-    const rx = 100 * p.scale
-    const ry = 36 * p.scale
-    const dx = item.x - panX
-    const dy = item.y - panY
-    const inPan = (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) < 1.05
-
-    if (inPan && item.vy > 0) {
-      item.y = panY + rand(-10, 18) * p.scale
-      item.vy *= -0.38
-      item.vx *= 0.68
-      item.spin *= 0.75
-    }
-
-    if (item.x < -40 || item.x > w + 40 || item.y > h - 112) {
-      splats.push({
-        x: clamp(item.x, 12, w - 12),
-        y: h - 118 + rand(-3, 8),
-        r: item.r,
-        type: item.type,
-        a: item.a
-      })
-      rice.splice(i, 1)
-      lost += 1
-      score = Math.max(0, score - 15)
-      lostEl.textContent = lost
-      scoreEl.textContent = score
-      if (rice.length < 22) addRice(p.x + rand(-70, 70) * p.scale, p.y + rand(-12, 12) * p.scale, true)
-    }
-  }
-
-  for (let i = sparks.length - 1; i >= 0; i--) {
-    const s = sparks[i]
-    s.life -= dt
-    s.x += s.vx * dt
-    s.y += s.vy * dt
-    s.vy += 0.08 * dt
-    if (s.life <= 0) sparks.splice(i, 1)
-  }
-
-  for (let i = steam.length - 1; i >= 0; i--) {
-    const s = steam[i]
-    s.y += s.vy * dt
-    s.x += Math.sin((s.y + i) * 0.03) * 0.18 * dt
-    s.alpha -= 0.0025 * dt
-    if (s.alpha <= 0 || s.y < 70) {
-      steam.splice(i, 1)
-      addSteam()
-    }
-  }
-
-  barEl.style.width = heat + "%"
-}
-
-function draw() {
-  ctx.clearRect(0, 0, w, h)
-  drawKitchen()
-  drawSteam()
-  drawFire()
-  drawPan()
-  drawRice()
-  drawSparks()
-  drawSplats()
-}
-
-function drawKitchen() {
-  const tableY = h - 120
-  const g = ctx.createLinearGradient(0, tableY, 0, h)
-  g.addColorStop(0, "#9a5320")
-  g.addColorStop(1, "#63300f")
-  ctx.fillStyle = g
-  ctx.fillRect(0, tableY, w, 120)
-  ctx.fillStyle = "#4b230b"
-  ctx.fillRect(0, tableY, w, 8)
-
-  const p = panBase()
-  ctx.save()
-  ctx.translate(p.x, p.y + 58 * p.scale)
-  ctx.scale(p.scale, p.scale)
-  roundRect(-118, 0, 236, 58, 18)
-  const stoveG = ctx.createLinearGradient(0, 0, 0, 60)
-  stoveG.addColorStop(0, "#4d4d4d")
-  stoveG.addColorStop(1, "#191919")
-  ctx.fillStyle = stoveG
-  ctx.fill()
-  ctx.lineWidth = 5
-  ctx.strokeStyle = "#101010"
-  ctx.stroke()
-  ctx.fillStyle = "#101010"
-  roundRect(-72, 16, 144, 16, 8)
-  ctx.fill()
-  ctx.restore()
-}
-
-function drawFire() {
-  const p = panBase()
-  const pulse = 1 + Math.sin(performance.now() * 0.018) * 0.08
-  ctx.save()
-  ctx.translate(p.x, p.y + 46 * p.scale)
-  ctx.scale(p.scale * pulse, p.scale * pulse)
-  ctx.globalAlpha = 0.78 + heat / 450
-  flame("#e53935", 42, 78)
-  flame("#ff8f00", 31, 61)
-  flame("#fff176", 18, 42)
-  ctx.restore()
-}
-
-function flame(color, rw, rh) {
-  ctx.beginPath()
-  ctx.moveTo(0, -rh)
-  ctx.bezierCurveTo(rw, -rh * 0.55, rw * 0.55, -rh * 0.05, 0, 0)
-  ctx.bezierCurveTo(-rw * 0.55, -rh * 0.05, -rw, -rh * 0.55, 0, -rh)
-  ctx.fillStyle = color
-  ctx.fill()
-}
-
-function drawPan() {
-  const p = panBase()
-  const lift = panLift
-  ctx.save()
-  ctx.translate(p.x, p.y - lift)
-  ctx.rotate(panAngle + panKick * -0.11)
-  ctx.scale(p.scale, p.scale)
-
-  ctx.save()
-  ctx.rotate(-0.12)
-  roundRect(75, 4, 128, 24, 14)
-  const hg = ctx.createLinearGradient(75, 4, 75, 28)
-  hg.addColorStop(0, "#3b3b3b")
-  hg.addColorStop(1, "#111111")
-  ctx.fillStyle = hg
-  ctx.fill()
-  ctx.lineWidth = 5
-  ctx.strokeStyle = "#080808"
-  ctx.stroke()
-  ctx.restore()
-
-  ctx.beginPath()
-  ctx.ellipse(0, 8, 116, 48, 0, 0, Math.PI * 2)
-  const outer = ctx.createRadialGradient(0, -4, 20, 0, 12, 130)
-  outer.addColorStop(0, "#656565")
-  outer.addColorStop(0.6, "#2c2c2c")
-  outer.addColorStop(1, "#0f0f0f")
-  ctx.fillStyle = outer
-  ctx.fill()
-  ctx.lineWidth = 7
-  ctx.strokeStyle = "#111111"
-  ctx.stroke()
-
-  ctx.beginPath()
-  ctx.ellipse(0, -1, 91, 31, 0, 0, Math.PI * 2)
-  const inner = ctx.createRadialGradient(0, -8, 8, 0, 0, 93)
-  inner.addColorStop(0, "#555555")
-  inner.addColorStop(1, "#202020")
-  ctx.fillStyle = inner
-  ctx.fill()
-
-  ctx.restore()
-}
-
-function drawRice() {
-  for (const item of rice) drawGrain(item.x, item.y, item.r, item.a, item.type, 1)
-}
-
-function drawSplats() {
-  for (const item of splats) drawGrain(item.x, item.y, item.r, item.a, item.type, 0.78)
-}
-
-function drawGrain(x, y, r, a, type, alpha) {
-  ctx.save()
-  ctx.translate(x, y)
-  ctx.rotate(a)
-  ctx.globalAlpha = alpha
-  let fill = "#fff5bf"
-  let stroke = "#d7a849"
-  if (type === 1) {
-    fill = "#ff8a26"
-    stroke = "#c45100"
-  }
-  if (type === 2) {
-    fill = "#78c850"
-    stroke = "#3f8426"
-  }
-  if (type === 3) {
-    fill = "#ffe45e"
-    stroke = "#c49b00"
-  }
-  if (type === 4) {
-    fill = "#f7d8a1"
-    stroke = "#b77b2a"
-  }
-  ctx.beginPath()
-  ctx.ellipse(0, 0, r * 1.28, r * 0.78, 0, 0, Math.PI * 2)
-  ctx.fillStyle = fill
-  ctx.fill()
-  ctx.lineWidth = 1.5
-  ctx.strokeStyle = stroke
-  ctx.stroke()
-  ctx.restore()
-}
-
-function drawSteam() {
-  ctx.save()
-  ctx.lineWidth = 3
-  ctx.lineCap = "round"
-  for (const s of steam) {
-    ctx.globalAlpha = s.alpha
-    ctx.strokeStyle = "#ffffff"
-    ctx.beginPath()
-    ctx.moveTo(s.x, s.y)
-    ctx.bezierCurveTo(s.x - s.size * 0.6, s.y - s.size * 0.4, s.x + s.size * 0.6, s.y - s.size * 0.9, s.x, s.y - s.size * 1.5)
-    ctx.stroke()
-  }
-  ctx.restore()
-}
-
-function drawSparks() {
-  ctx.save()
-  for (const s of sparks) {
-    ctx.globalAlpha = Math.max(0, s.life / s.max)
-    ctx.fillStyle = "#fff176"
-    ctx.beginPath()
-    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  ctx.restore()
-}
-
-function roundRect(x, y, ww, hh, rr) {
-  ctx.beginPath()
-  ctx.moveTo(x + rr, y)
-  ctx.arcTo(x + ww, y, x + ww, y + hh, rr)
-  ctx.arcTo(x + ww, y + hh, x, y + hh, rr)
-  ctx.arcTo(x, y + hh, x, y, rr)
-  ctx.arcTo(x, y, x + ww, y, rr)
-  ctx.closePath()
-}
-
-function rand(min, max) {
-  return min + Math.random() * (max - min)
-}
-
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v))
-}
-
-canvas.addEventListener("pointerdown", e => {
-  e.preventDefault()
-  tap(e.clientX, e.clientY)
-})
-
-startBtn.addEventListener("click", startGame)
-
-window.addEventListener("resize", () => {
-  resize()
-  if (!running) draw()
-})
-
+const canvas=document.getElementById("game")
+const ctx=canvas.getContext("2d")
+const scoreEl=document.getElementById("score")
+const lostEl=document.getElementById("lost")
+const timeEl=document.getElementById("time")
+const bestEl=document.getElementById("best")
+const barEl=document.getElementById("bar")
+const tipEl=document.getElementById("tip")
+const overlay=document.getElementById("overlay")
+const menu=document.getElementById("menu")
+const startBtn=document.getElementById("startBtn")
+const flash=document.getElementById("flash")
+let w=0,h=0,dpr=1,running=false,score=0,lost=0,timeLeft=30,best=Number(localStorage.getItem("cartoonFriedRiceBest")||0),rice=[],splats=[],stars=[],steam=[],timer=null,raf=0,lastTime=0,lastTap=0,stability=70,combo=0,panX=0,panY=0,scale=1,flipT=1,flipping=false,panLift=0,panAngle=0,panForward=0,cooldown=0
+bestEl.textContent=best
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);w=window.innerWidth;h=window.innerHeight;canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);canvas.style.width=w+"px";canvas.style.height=h+"px";ctx.setTransform(dpr,0,0,dpr,0,0);setLayout();if(!running)draw()}
+function setLayout(){scale=Math.min(1.08,Math.max(.74,w/430));panX=w*.5;panY=Math.min(h-212,h*.76)}
+function rand(min,max){return min+Math.random()*(max-min)}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function resetGame(){score=0;lost=0;timeLeft=30;stability=70;combo=0;rice=[];splats=[];stars=[];steam=[];flipT=1;flipping=false;panLift=0;panAngle=0;panForward=0;cooldown=0;const total=Math.max(95,Math.min(135,Math.floor(w/5.7)));for(let i=0;i<total;i++)rice.push(createRice(false));for(let i=0;i<15;i++)steam.push(createSteam());tipEl.textContent="等飯落回鍋裡再點，物理會最穩";updateUI()}
+function createRice(air){const p=randomPanLocal();const piece={type:randomFood(),lx:p.x,ly:p.y,x:0,y:0,vx:0,vy:0,rot:rand(0,Math.PI*2),spin:rand(-4,4),size:rand(.86,1.16),air:air,face:Math.random()<.08};if(air){const q=panToWorld(piece.lx,piece.ly);piece.x=q.x;piece.y=q.y}return piece}
+function randomFood(){const r=Math.random();if(r<.68)return"rice";if(r<.81)return"egg";if(r<.9)return"carrot";if(r<.97)return"pea";return"scallion"}
+function randomPanLocal(){const a=rand(0,Math.PI*2);const r=Math.sqrt(Math.random());return{x:Math.cos(a)*r*68,y:Math.sin(a)*r*20-6+Math.abs(Math.cos(a)*r)*5}}
+function createSteam(){return{x:rand(-78,78),y:rand(-18,18),life:rand(0,1),speed:rand(.23,.5),bend:rand(-1,1)}}
+function updateUI(){scoreEl.textContent=Math.floor(score);lostEl.textContent=lost;timeEl.textContent=timeLeft;bestEl.textContent=best;barEl.style.width=stability+"%"}
+function startGame(){overlay.style.display="none";running=true;resetGame();clearInterval(timer);timer=setInterval(()=>{if(!running)return;timeLeft--;updateUI();if(timeLeft<=0)endGame()},1000);lastTime=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function endGame(){running=false;clearInterval(timer);cancelAnimationFrame(raf);const remain=rice.length;score=Math.max(0,Math.round(score+remain*2-lost*9));if(score>best){best=score;localStorage.setItem("cartoonFriedRiceBest",String(best))}updateUI();let rank="再練一下節奏，飯會更穩";if(score>=950&&lost<=8)rank="神級卡通快炒師，幾乎沒掉飯";else if(score>=720&&lost<=15)rank="高級炒飯師，翻鍋很漂亮";else if(score>=520&&lost<=24)rank="不錯，已經很像快炒店";else if(lost>=32)rank="掉太多飯了，先不要狂點";menu.innerHTML=`<h1>遊戲結束</h1><p>${rank}</p><div class="result"><div>分數<span>${Math.floor(score)}</span></div><div>掉飯<span>${lost}</span></div><div>鍋內剩飯<span>${remain}</span></div><div>最佳<span>${best}</span></div></div><button id="againBtn">再玩一次</button>`;overlay.style.display="grid";document.getElementById("againBtn").addEventListener("click",startGame)}
+function showFlash(text){flash.textContent=text;flash.classList.remove("show");void flash.offsetWidth;flash.classList.add("show")}
+function panToWorld(lx,ly){const c=Math.cos(panAngle),s=Math.sin(panAngle);return{x:panX+panForward+(lx*c-ly*s)*scale,y:panY-panLift+(lx*s+ly*c)*scale}}
+function worldToPan(x,y){const dx=(x-(panX+panForward))/scale,dy=(y-(panY-panLift))/scale,c=Math.cos(-panAngle),s=Math.sin(-panAngle);return{x:dx*c-dy*s,y:dx*s+dy*c}}
+function panFloor(x){const t=Math.abs(x)/96;return 3+t*t*16}
+function panWidthAtY(y){const t=clamp((y+30)/62,0,1);return 104-12*(1-t)}
+function tapGame(clientX,clientY){if(!running)return;const rect=canvas.getBoundingClientRect();const x=clientX-rect.left,y=clientY-rect.top;const local=worldToPan(x,y);if(!(Math.abs(local.x)<155&&local.y>-85&&local.y<90))return;const now=performance.now();const gap=lastTap?now-lastTap:0;const airborne=rice.filter(p=>p.air).length;const goodLanding=airborne>rice.length*.28&&airborne<rice.length*.9;const tooFast=cooldown>.05||gap>0&&gap<260&&!goodLanding;lastTap=now;let quality="ok",vertical=520,sideSpread=80,chaos=.9;if(!tooFast&&goodLanding){quality="perfect";combo++;stability=clamp(stability+9,0,100);score+=22+Math.min(combo*3,30);vertical=500;sideSpread=52;chaos=.55;tipEl.textContent="時機漂亮，飯會自然回鍋";if(combo%3===0)showFlash("漂亮翻鍋！")}else if(!tooFast){quality="good";combo=Math.max(1,combo);stability=clamp(stability+4,0,100);score+=13;vertical=525;sideSpread=70;chaos=.75;tipEl.textContent="不錯，等飯回落時再點會更穩"}else{quality="bad";combo=0;stability=clamp(stability-18,0,100);score+=4;vertical=585;sideSpread=145;chaos=1.35;tipEl.textContent="太急了，飯會被甩出去";showFlash("太快了！")}startFlip();launchRice(vertical,sideSpread,chaos,quality);addStars(quality);cooldown=.42;updateUI()}
+function startFlip(){flipping=true;flipT=0}
+function launchRice(vertical,sideSpread,chaos,quality){const badExtra=quality==="bad"?.16+(100-stability)/260:.02+(100-stability)/520;for(let i=0;i<rice.length;i++){const p=rice[i];const origin=p.air?{x:p.x,y:p.y}:panToWorld(p.lx,p.ly);p.x=origin.x;p.y=origin.y;p.air=true;const local=worldToPan(p.x,p.y);const centerForce=local.x/90;p.vx=centerForce*sideSpread+rand(-38,38)*chaos;p.vy=-(vertical+rand(-40,50))*scale;p.spin=rand(-8,8)*chaos;if(Math.random()<badExtra&&Math.abs(local.x)>28){p.vx+=Math.sign(local.x||rand(-1,1))*rand(120,210)*scale;p.vy-=rand(0,80)*scale}}}
+function addStars(quality){const count=quality==="bad"?4:quality==="perfect"?10:7;for(let i=0;i<count;i++)stars.push({x:panX+rand(-70,70)*scale,y:panY-rand(28,70)*scale,vx:rand(-90,90),vy:rand(-150,-60),life:rand(.38,.62),max:.62,r:rand(3,6),kind:Math.random()<.5?"star":"dot"})}
+function loop(t){if(!running)return;const dt=Math.min(.026,(t-lastTime)/1000);lastTime=t;update(dt);draw();raf=requestAnimationFrame(loop)}
+function update(dt){setLayout();cooldown=Math.max(0,cooldown-dt);if(flipping){flipT+=dt*3.15;if(flipT>=1){flipT=1;flipping=false}}const e=1-Math.pow(1-flipT,3),wave=Math.sin(Math.PI*e);panLift=wave*34*scale;panAngle=-wave*.22+Math.sin(Math.PI*2*e)*.06;panForward=wave*8*scale;stability=clamp(stability-dt*.9,0,100);for(let i=steam.length-1;i>=0;i--){const s=steam[i];s.life+=dt*s.speed;if(s.life>1)steam[i]=createSteam()}const gravity=1120;for(let i=rice.length-1;i>=0;i--){const p=rice[i];if(p.air){p.vy+=gravity*dt;p.vx*=Math.pow(.992,dt*60);p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.spin*dt;const local=worldToPan(p.x,p.y),width=panWidthAtY(local.y),floor=panFloor(local.x),insideCatch=Math.abs(local.x)<width&&local.y>-38&&local.y<34;if(p.vy>0&&insideCatch&&local.y>=floor){const rest=randomPanLocal();p.air=false;p.lx=rest.x*.78+local.x*.22;p.ly=rest.y;p.vx=0;p.vy=0;p.rot=rand(0,Math.PI*2);p.spin=rand(-3,3)}if(p.x<-45||p.x>w+45||p.y>h-126){splats.push({x:clamp(p.x,18,w-18),y:h-124+rand(-4,6),type:p.type,rot:rand(0,Math.PI*2),size:p.size,face:p.face});rice.splice(i,1);lost++;score=Math.max(0,score-7);updateUI()}}}for(let i=stars.length-1;i>=0;i--){const s=stars[i];s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.vy+=260*dt;if(s.life<=0)stars.splice(i,1)}if(rice.length<12)endGame()}
+function draw(){ctx.clearRect(0,0,w,h);drawBackground();drawStove();drawFlame();drawSteam();drawPanBack();drawFood();drawPanFront();drawStars();drawSplats()}
+function drawBackground(){const tableY=h-118;ctx.fillStyle="rgba(255,255,255,.18)";for(let i=0;i<6;i++){const x=(i*170+(performance.now()*.01))%(w+180)-90;drawCloud(x,90+i%2*54,1+i%3*.12)}const g=ctx.createLinearGradient(0,tableY,0,h);g.addColorStop(0,"#a85d24");g.addColorStop(1,"#65330f");ctx.fillStyle=g;ctx.fillRect(0,tableY,w,h-tableY);ctx.fillStyle="#4b2309";ctx.fillRect(0,tableY,w,8);ctx.globalAlpha=.18;ctx.fillStyle="#fff1bb";for(let x=-40;x<w+80;x+=82){ctx.beginPath();ctx.ellipse(x,tableY+28,40,6,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
+function drawCloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle="rgba(255,255,255,.22)";ctx.beginPath();ctx.arc(-28,8,18,0,Math.PI*2);ctx.arc(-8,-2,24,0,Math.PI*2);ctx.arc(18,6,20,0,Math.PI*2);ctx.arc(38,12,14,0,Math.PI*2);ctx.fill();ctx.restore()}
+function drawStove(){const x=panX,y=panY+62*scale;ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.fillStyle="rgba(0,0,0,.22)";roundRect(-122,28,244,20,12);ctx.fill();const body=ctx.createLinearGradient(0,-12,0,82);body.addColorStop(0,"#626b78");body.addColorStop(1,"#232832");ctx.fillStyle=body;roundRect(-112,-6,224,84,25);ctx.fill();ctx.lineWidth=6;ctx.strokeStyle="#222";roundRect(-112,-6,224,84,25);ctx.stroke();ctx.fillStyle="#15181f";roundRect(-60,26,120,22,12);ctx.fill();ctx.fillStyle="#ffdf75";ctx.beginPath();ctx.arc(-86,18,8,0,Math.PI*2);ctx.fill();ctx.restore()}
+function drawFlame(){const x=panX,y=panY+42*scale,pulse=1+Math.sin(performance.now()*.016)*.08;ctx.save();ctx.translate(x,y);ctx.scale(scale*pulse,scale*pulse);for(let i=0;i<8;i++){const fx=-48+i*14,h1=34+Math.sin(performance.now()*.008+i)*8;drawFlameShape(fx,0,12,h1,"#f4511e");drawFlameShape(fx,6,8,h1*.65,"#ff9800");drawFlameShape(fx,11,5,h1*.38,"#fff176")}ctx.restore()}
+function drawFlameShape(x,y,fw,fh,color){ctx.beginPath();ctx.moveTo(x,y-fh);ctx.bezierCurveTo(x+fw,y-fh*.55,x+fw*.65,y-fh*.08,x,y);ctx.bezierCurveTo(x-fw*.65,y-fh*.08,x-fw,y-fh*.55,x,y-fh);ctx.fillStyle=color;ctx.fill()}
+function drawSteam(){ctx.save();ctx.lineCap="round";ctx.lineWidth=4;for(let i=0;i<steam.length;i++){const s=steam[i],p=panToWorld(s.x,-30-s.life*74+s.y);ctx.globalAlpha=(1-s.life)*.28;ctx.strokeStyle="#fff9df";ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.bezierCurveTo(p.x-12*s.bend,p.y-12,p.x+16*s.bend,p.y-28,p.x,p.y-46);ctx.stroke()}ctx.globalAlpha=1;ctx.restore()}
+function drawPanBack(){ctx.save();ctx.translate(panX+panForward,panY-panLift);ctx.rotate(panAngle);ctx.scale(scale,scale);ctx.fillStyle="rgba(0,0,0,.2)";ctx.beginPath();ctx.ellipse(0,34,132,18,0,0,Math.PI*2);ctx.fill();ctx.save();ctx.rotate(-.08);const handle=ctx.createLinearGradient(80,-10,222,10);handle.addColorStop(0,"#54606f");handle.addColorStop(1,"#171b22");ctx.fillStyle=handle;roundRect(78,-8,154,30,15);ctx.fill();ctx.lineWidth=6;ctx.strokeStyle="#111";roundRect(78,-8,154,30,15);ctx.stroke();ctx.fillStyle="#eef7ff";ctx.globalAlpha=.18;roundRect(104,-2,84,7,4);ctx.fill();ctx.globalAlpha=1;ctx.restore();const outer=ctx.createRadialGradient(-22,-18,12,0,0,138);outer.addColorStop(0,"#6f7c88");outer.addColorStop(.52,"#303741");outer.addColorStop(1,"#10131a");ctx.fillStyle=outer;ctx.beginPath();ctx.ellipse(0,0,130,62,0,0,Math.PI*2);ctx.fill();ctx.lineWidth=7;ctx.strokeStyle="#111";ctx.stroke();const inner=ctx.createRadialGradient(-25,-18,10,0,0,105);inner.addColorStop(0,"#5d626a");inner.addColorStop(.48,"#393d43");inner.addColorStop(1,"#1c1f25");ctx.fillStyle=inner;ctx.beginPath();ctx.ellipse(0,-5,99,36,0,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.globalAlpha=.12;ctx.beginPath();ctx.ellipse(-36,-20,44,10,-.18,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.restore()}
+function drawPanFront(){ctx.save();ctx.translate(panX+panForward,panY-panLift);ctx.rotate(panAngle);ctx.scale(scale,scale);ctx.beginPath();ctx.ellipse(0,0,130,62,0,.1*Math.PI,.9*Math.PI);ctx.lineWidth=8;ctx.strokeStyle="#0c0f15";ctx.stroke();ctx.beginPath();ctx.ellipse(0,-6,100,37,0,.1*Math.PI,.9*Math.PI);ctx.lineWidth=5;ctx.strokeStyle="rgba(255,255,255,.14)";ctx.stroke();ctx.fillStyle="#0c0f15";ctx.beginPath();ctx.arc(-38,20,6,0,Math.PI*2);ctx.arc(38,20,6,0,Math.PI*2);ctx.fill();ctx.lineWidth=4;ctx.strokeStyle="#0c0f15";ctx.beginPath();ctx.arc(0,23,18,0,Math.PI);ctx.stroke();ctx.restore()}
+function drawFood(){const sorted=rice.slice().sort((a,b)=>{const ay=a.air?a.y:panToWorld(a.lx,a.ly).y;const by=b.air?b.y:panToWorld(b.lx,b.ly).y;return ay-by});for(const p of sorted){const pos=p.air?{x:p.x,y:p.y}:panToWorld(p.lx,p.ly);drawIngredient(pos.x,pos.y,p.type,p.rot,p.size,p.face)}}
+function drawIngredient(x,y,type,rot,size,face){ctx.save();ctx.translate(x,y);ctx.rotate(rot);if(type==="rice"){ctx.fillStyle="#fff4c8";ctx.strokeStyle="#9b6b26";ctx.lineWidth=1.8;ctx.beginPath();ctx.ellipse(0,0,7.4*size,4.6*size,0,0,Math.PI*2);ctx.fill();ctx.stroke();if(face){ctx.fillStyle="#4a2b10";ctx.beginPath();ctx.arc(-2.4*size,-.8*size,.8*size,0,Math.PI*2);ctx.arc(2.4*size,-.8*size,.8*size,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#4a2b10";ctx.lineWidth=.9;ctx.beginPath();ctx.arc(0,.8*size,2*size,0,Math.PI);ctx.stroke()}}if(type==="egg"){ctx.fillStyle="#ffe16a";ctx.strokeStyle="#9b6b26";ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(-6*size,-4*size);ctx.quadraticCurveTo(3*size,-7*size,8*size,-1*size);ctx.quadraticCurveTo(6*size,7*size,-4*size,5*size);ctx.quadraticCurveTo(-9*size,2*size,-6*size,-4*size);ctx.fill();ctx.stroke()}if(type==="carrot"){ctx.fillStyle="#ff8b2d";ctx.strokeStyle="#9b4d12";ctx.lineWidth=1.8;roundRect(-5.5*size,-5*size,11*size,10*size,3*size);ctx.fill();ctx.stroke()}if(type==="pea"){ctx.fillStyle="#79c94b";ctx.strokeStyle="#3f7d24";ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,5*size,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="rgba(255,255,255,.42)";ctx.beginPath();ctx.arc(-1.8*size,-1.8*size,1.3*size,0,Math.PI*2);ctx.fill()}if(type==="scallion"){ctx.strokeStyle="#3ca947";ctx.lineWidth=3.2*size;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-6*size,-2*size);ctx.lineTo(6*size,2*size);ctx.stroke();ctx.strokeStyle="#8ee37e";ctx.lineWidth=1.3*size;ctx.beginPath();ctx.moveTo(-4*size,-1.2*size);ctx.lineTo(4*size,1.2*size);ctx.stroke()}ctx.restore()}
+function drawStars(){ctx.save();for(const s of stars){ctx.globalAlpha=Math.max(0,s.life/s.max);if(s.kind==="star"){ctx.fillStyle="#fff176";ctx.strokeStyle="#a65a12";ctx.lineWidth=1.5;drawStar(s.x,s.y,s.r*1.8,s.r*.8);ctx.fill();ctx.stroke()}else{ctx.fillStyle="#fff4be";ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()}}ctx.globalAlpha=1;ctx.restore()}
+function drawStar(x,y,r1,r2){ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2===0?r1:r2,px=x+Math.cos(a)*r,py=y+Math.sin(a)*r;if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.closePath()}
+function drawSplats(){for(const p of splats)drawIngredient(p.x,p.y,p.type,p.rot,p.size,p.face)}
+function roundRect(x,y,ww,hh,rr){ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+ww,y,x+ww,y+hh,rr);ctx.arcTo(x+ww,y+hh,x,y+hh,rr);ctx.arcTo(x,y+hh,x,y,rr);ctx.arcTo(x,y,x+ww,y,rr);ctx.closePath()}
+canvas.addEventListener("pointerdown",e=>{e.preventDefault();tapGame(e.clientX,e.clientY)})
+window.addEventListener("resize",resize)
+startBtn.addEventListener("click",startGame)
 resize()
 draw()
 </script>
