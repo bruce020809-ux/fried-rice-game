@@ -432,7 +432,7 @@ lost++
 }
 function addStars(q){
 let n=q==="bad"?3:q==="perfect"?9:6
-for(let i=0;i<n;i++)stars.push({x:panX+rand(-70,70)*scale,y:panY-rand(28,70)*scale,vx:rand(-85,85),vy:rand(-150,-60),life:rand(.36,.62),max:.62,r:rand(3,6),kind:Math.random()<.5?"star":"dot"})
+for(let i=0;i<n;i++)stars.push({x:panX+rand(-70,70)*scale,y:panY-rand(28,70)*scale,vx:rand(-85,85),vy:rand(-150,-60),life:rand(.36,.62),max:.62,r:rand(3,6),rot:rand(0,Math.PI*2),spin:rand(-8,8),kind:Math.random()<.5?"star":"dot"})
 }
 function loop(t){if(!running)return;let dt=Math.min(.026,(t-lastTime)/1000);lastTime=t;update(dt);draw();raf=requestAnimationFrame(loop)}
 function update(dt){
@@ -476,6 +476,15 @@ s.vx=0
 s.vy=0
 s.spin=0
 }
+}
+for(let i=stars.length-1;i>=0;i--){
+let s=stars[i]
+s.life-=dt
+s.x+=s.vx*dt
+s.y+=s.vy*dt
+s.vy+=260*dt
+s.rot=(s.rot||0)+(s.spin||0)*dt
+if(s.life<=0)stars.splice(i,1)
 }
 updateUI()
 }
@@ -713,19 +722,23 @@ function drawStars(){
 ctx.save()
 for(let s of stars){
 ctx.globalAlpha=Math.max(0,s.life/s.max)
+ctx.save()
+ctx.translate(s.x,s.y)
+ctx.rotate(s.rot||0)
 if(s.kind==="star"){
 ctx.fillStyle="#fff176"
 ctx.strokeStyle="#a65a12"
 ctx.lineWidth=1.5
-star(s.x,s.y,s.r*1.8,s.r*.8)
+star(0,0,s.r*1.8,s.r*.8)
 ctx.fill()
 ctx.stroke()
 }else{
 ctx.fillStyle="#fff4be"
 ctx.beginPath()
-ctx.arc(s.x,s.y,s.r,0,Math.PI*2)
+ctx.arc(0,0,s.r,0,Math.PI*2)
 ctx.fill()
 }
+ctx.restore()
 }
 ctx.globalAlpha=1
 ctx.restore()
