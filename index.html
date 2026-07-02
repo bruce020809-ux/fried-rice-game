@@ -30,7 +30,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .bar{height:100%;width:84%;border-radius:999px;background:linear-gradient(90deg,#fff176 0%,#ffc234 45%,#ff8a2a 72%,#f4511e 100%);transition:width .08s linear}
 .tip{margin-top:9px;text-align:center;font-size:14px;font-weight:1000;color:#3a1d08;text-shadow:0 2px 0 rgba(255,255,255,.65)}
 .overlay{position:absolute;inset:0;z-index:40;display:grid;place-items:center;padding:18px;background:rgba(93,47,12,.12);pointer-events:none}
-.menu{width:min(430px,88vw);text-align:center;color:#3a1d08;background:#fffaf0;border:4px solid #6b3a16;border-radius:28px;box-shadow:0 12px 0 rgba(107,58,22,.28);padding:22px 20px 20px;transform:translateY(12px);pointer-events:auto}
+.menu{width:min(430px,88vw);max-height:min(82dvh,760px);overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:center;color:#3a1d08;background:#fffaf0;border:4px solid #6b3a16;border-radius:28px;box-shadow:0 12px 0 rgba(107,58,22,.28);padding:22px 20px 20px;transform:translateY(12px);pointer-events:auto}
 .menu h1{margin:0 0 10px;font-size:31px;line-height:1.08}
 .menu p{margin:7px 0;font-size:14px;line-height:1.52;font-weight:900}
 .result{margin:15px 0 4px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -68,7 +68,26 @@ button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
 .menu.fail-mode{border-color:#8b2f14;box-shadow:0 12px 0 rgba(107,58,22,.28),0 0 0 6px rgba(255,123,90,.26),0 0 40px rgba(148,50,21,.26);animation:menuShake .7s ease-out}
 .menu.master-mode{border-color:#8f4a00;box-shadow:0 12px 0 rgba(107,58,22,.28),0 0 0 8px rgba(255,231,123,.38),0 0 50px rgba(255,214,82,.42)}
 .result-hero{margin:4px 0 10px;font-size:18px;font-weight:1000;color:#8b3c00;animation:heroBounce .9s ease-out}
-.score-hero{margin:12px auto 8px;width:min(250px,78%);padding:10px 14px;border-radius:22px;border:3px solid #6b3a16;background:linear-gradient(180deg,#fff7d7,#ffd071);font-size:22px;font-weight:1000;color:#7a3200;box-shadow:0 6px 0 rgba(107,58,22,.2)}
+
+.menu-sub{margin:6px 0 14px;font-size:15px;font-weight:1000;color:#7a3200}
+.dish-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0 12px}
+.dish-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:20px;border:3px solid rgba(107,58,22,.36);background:#fff4d6;cursor:pointer;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+.dish-card.active{border-color:#a45300;background:linear-gradient(180deg,#fff4cf,#ffd98d);box-shadow:0 6px 0 rgba(107,58,22,.15)}
+.dish-card:active{transform:translateY(3px)}
+.dish-main{text-align:left}
+.dish-name{font-size:20px;font-weight:1000;line-height:1.1}
+.dish-meta{margin-top:4px;font-size:12px;font-weight:1000;color:#8b4b11}
+.dish-note{margin-top:4px;font-size:11px;font-weight:900;color:#6b3a16}
+.dish-badge{min-width:70px;padding:10px 10px;border-radius:16px;border:2px solid #6b3a16;background:#fffaf0;font-size:16px;font-weight:1000;color:#6b3a16}
+.selected-panel{margin:12px 0 2px;padding:12px 14px;border-radius:20px;border:3px solid rgba(107,58,22,.3);background:linear-gradient(180deg,#fffaf0,#ffe9be)}
+.selected-title{font-size:18px;font-weight:1000}
+.selected-text{margin-top:5px;font-size:12px;line-height:1.5;font-weight:900;color:#6b3a16}
+.best-line{margin-top:7px;font-size:12px;font-weight:1000;color:#a45300}
+.recipe-pill{display:inline-flex;align-items:center;justify-content:center;margin:2px auto 8px;padding:7px 12px;border-radius:999px;background:#ffe09d;border:2px solid rgba(107,58,22,.35);font-size:12px;font-weight:1000;color:#7a3200}
+.action-row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+.secondary-btn{background:linear-gradient(180deg,#ffe7b3,#ffb95c);box-shadow:0 7px 0 #b7771f;color:#6b3a16}
+.secondary-btn:active{box-shadow:0 3px 0 #b7771f}
+.score-hero{margin:12px auto 8px;width:min(300px,86%);padding:10px 14px;border-radius:22px;border:3px solid #6b3a16;background:linear-gradient(180deg,#fff7d7,#ffd071);font-size:22px;font-weight:1000;color:#7a3200;box-shadow:0 6px 0 rgba(107,58,22,.2);white-space:nowrap;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
 .fail-stamp{margin:12px auto 8px;width:min(230px,74%);padding:12px 14px;border-radius:22px;border:3px solid #8b2f14;background:linear-gradient(180deg,#ffe4db,#ffb6a1);font-size:24px;font-weight:1000;color:#8b2f14;box-shadow:0 6px 0 rgba(139,47,20,.2);transform:rotate(-4deg);animation:stampDown .65s cubic-bezier(.2,.85,.25,1)}
 @keyframes flash{0%{opacity:0;transform:translate(-50%,-20%) scale(.82) rotate(-6deg)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}100%{opacity:0;transform:translate(-50%,-88%) scale(1) rotate(0)}}
 @keyframes badgePop{0%{opacity:0;transform:translateX(-50%) scale(.55) translateY(-18px)}55%{opacity:1;transform:translateX(-50%) scale(1.12) translateY(0)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
@@ -82,6 +101,20 @@ button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
 @keyframes heroBounce{0%{opacity:0;transform:scale(.7) translateY(12px)}60%{opacity:1;transform:scale(1.06) translateY(-4px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes stampDown{0%{opacity:0;transform:rotate(-12deg) scale(1.5)}55%{opacity:1;transform:rotate(-3deg) scale(.92)}100%{opacity:1;transform:rotate(-4deg) scale(1)}}
 @media(max-width:600px){
+.menu{max-height:min(80dvh,700px)}
+.menu-sub{font-size:14px}
+.dish-grid{gap:8px;margin:8px 0 10px}
+.dish-card{padding:10px 11px;border-radius:18px}
+.dish-name{font-size:18px}
+.dish-meta{font-size:11px}
+.dish-note{font-size:10px}
+.dish-badge{min-width:62px;font-size:14px;padding:8px 8px}
+.selected-title{font-size:16px}
+.selected-text{font-size:11px}
+.recipe-pill{font-size:11px;padding:6px 10px}
+.action-row{gap:8px}
+.secondary-btn{font-size:18px}
+
 #app{min-height:620px}
 .topbar{top:max(10px,env(safe-area-inset-top));left:9px;right:9px;gap:6px;grid-template-columns:1.22fr .84fr 1fr;align-items:stretch}
 .card{height:86px;border-width:3px;border-radius:18px}
@@ -104,6 +137,12 @@ button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
 .flash{font-size:28px}
 }
 @media(max-width:390px){
+.score-hero{font-size:18px;width:min(280px,88%)}
+.dish-name{font-size:16px}
+.dish-badge{min-width:58px;font-size:13px}
+.selected-title{font-size:15px}
+.selected-text{font-size:10px}
+
 .topbar{grid-template-columns:1.2fr .82fr 1fr;gap:5px}
 .card,.brand,.map-card,.score-card{height:84px}
 .title{font-size:13px}
@@ -120,7 +159,7 @@ button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
 <div id="app">
 <canvas id="game"></canvas>
 <div class="topbar">
-<div class="card brand"><div class="title">卡通炒飯翻鍋</div><div class="desc">穩穩翻鍋別燒焦<br>太急才會掉飯</div></div>
+<div class="card brand"><div class="title" id="brandTitle">卡通炒飯翻鍋</div><div class="desc" id="brandDesc">穩穩翻鍋別燒焦<br>太急才會掉飯</div></div>
 <div class="card map-card">
 <div class="map-icon">📍</div>
 <a class="map-btn" id="mapBtn" href="https://maps.app.goo.gl/LaSTTYi846HwvyE2A?g_st=ic" target="_blank" rel="noopener">推薦店家</a>
@@ -139,7 +178,7 @@ button:active{transform:translateY(4px);box-shadow:0 3px 0 #a94900}
 <div class="flash" id="flash">漂亮翻鍋！</div>
 <div class="result-fx" id="resultFx"></div>
 <div class="meter"><div class="bar-bg"><div class="bar" id="bar"></div></div><div class="tip" id="tip">穩穩翻不太掉飯，太久沒翻會燒焦</div></div>
-<div class="overlay" id="overlay"><div class="menu" id="menu"><h1>卡通炒飯翻鍋</h1><p>點鍋子讓炒飯整團翻起來，再自然落回鍋裡。</p><p>太久沒翻，飯會慢慢變黑燒焦。</p><p>超過 800 分會出現完美炒飯圖案。</p><button id="startBtn">開始遊戲</button></div></div>
+<div class="overlay" id="overlay"><div class="menu" id="menu"></div></div>
 </div>
 <script>
 const canvas=document.getElementById("game")
@@ -153,29 +192,119 @@ const barEl=document.getElementById("bar")
 const tipEl=document.getElementById("tip")
 const overlay=document.getElementById("overlay")
 const menu=document.getElementById("menu")
-const startBtn=document.getElementById("startBtn")
+const titleEl=document.getElementById("brandTitle")
+const descEl=document.getElementById("brandDesc")
 const flash=document.getElementById("flash")
 const resultFx=document.getElementById("resultFx")
 const mapBtn=document.getElementById("mapBtn")
 let w=0,h=0,dpr=1,scale=1,panX=0,panY=0
-let running=false,score=0,lost=0,timeLeft=30,best=Number(localStorage.getItem("cartoonFriedRiceBest7")||0),burn=0
+let running=false,score=0,lost=0,timeLeft=30,best=0,burn=0
 let food=[],spills=[],stars=[],steam=[]
 let timer=null,raf=0,lastTime=0,lastTap=0,stability=84,combo=0,cooldown=0,idleTime=0
 let flip={active:false,t:1,duration:.86,lift:0,angle:0,forward:0,shake:0,quality:"normal"}
 bestEl.textContent=best
 mapBtn.addEventListener("pointerdown",e=>e.stopPropagation())
 mapBtn.addEventListener("click",e=>e.stopPropagation())
+
+const recipes={
+egg:{key:"egg",name:"蛋炒飯",title:"蛋炒飯翻鍋",difficulty:"簡單",label:"容易",cardLine1:"最不容易掉出去",cardLine2:"節奏最寬鬆",menuNote:"只要穩穩翻鍋就很好上手",tip:"蛋炒飯最穩，穩穩翻不太掉飯",mix:[["rice",0.74],["egg",0.18],["scallion",0.08]],spillBoost:.72,burnRate:.9,drain:.85,minGap:165,perfectMin:300,perfectMax:930,badPenalty:6,goodGain:4,perfectGain:8,goodScore:13,perfectScore:24,foodScale:1.02},
+mixed:{key:"mixed",name:"什錦炒飯",title:"什錦炒飯翻鍋",difficulty:"普通",label:"普通",cardLine1:"配料均衡剛剛好",cardLine2:"需要正常節奏",menuNote:"手感與風險最平衡的挑戰",tip:"什錦炒飯最均衡，節奏正常就好",mix:[["rice",0.59],["egg",0.12],["carrot",0.12],["pea",0.10],["scallion",0.07]],spillBoost:1,burnRate:1,drain:1,minGap:190,perfectMin:330,perfectMax:860,badPenalty:8,goodGain:3,perfectGain:7,goodScore:12,perfectScore:22,foodScale:1},
+beef:{key:"beef",name:"牛肉炒飯",title:"牛肉炒飯翻鍋",difficulty:"難",label:"困難",cardLine1:"最容易掉出去",cardLine2:"時機要更準",menuNote:"牛肉較重，翻太急很容易噴飯",tip:"牛肉炒飯最難，時機要更準更穩",mix:[["rice",0.54],["beef",0.18],["egg",0.10],["carrot",0.09],["scallion",0.09]],spillBoost:1.38,burnRate:1.12,drain:1.16,minGap:210,perfectMin:360,perfectMax:760,badPenalty:10,goodGain:2,perfectGain:6,goodScore:11,perfectScore:21,foodScale:.96}
+}
+let savedRecipe=localStorage.getItem("friedRiceSelectedRecipe")
+let currentRecipeKey=recipes[savedRecipe]?savedRecipe:"mixed"
+let currentRecipe=recipes[currentRecipeKey]
+function bestKey(){return "cartoonFriedRiceBest7_"+currentRecipeKey}
+function getBest(){let old=Number(localStorage.getItem("cartoonFriedRiceBest7")||0);let saved=Number(localStorage.getItem(bestKey())||0);return Math.max(saved,currentRecipeKey==="mixed"?old:0)}
+function saveBest(v){localStorage.setItem(bestKey(),String(v))}
+best=getBest()
+bestEl.textContent=best
+
 function resize(){dpr=Math.min(window.devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);canvas.style.width=w+"px";canvas.style.height=h+"px";ctx.setTransform(dpr,0,0,dpr,0,0);layout();if(!running)draw()}
 function layout(){scale=Math.min(1.08,Math.max(.75,w/430));panX=w*.5;panY=Math.min(h-210,h*.765)}
 function rand(a,b){return a+Math.random()*(b-a)}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function resetGame(){score=0;lost=0;timeLeft=30;burn=0;stability=84;combo=0;cooldown=0;idleTime=0;food=[];spills=[];stars=[];steam=[];flip={active:false,t:1,duration:.86,lift:0,angle:0,forward:0,shake:0,quality:"normal"};let total=Math.max(95,Math.min(135,Math.floor(w/5.8)));for(let i=0;i<total;i++)food.push(makeFood());for(let i=0;i<15;i++)steam.push(makeSteam());tipEl.textContent="穩穩翻不太掉飯，太久沒翻會燒焦";updateUI()}
-function makeFood(){let p=randomFoodLocal();return{type:foodType(),lx:p.x,ly:p.y,rot:rand(0,Math.PI*2),spin:rand(-2,2),size:rand(.86,1.15),bounce:rand(0,Math.PI*2),face:Math.random()<.08}}
-function foodType(){let r=Math.random();if(r<.68)return"rice";if(r<.81)return"egg";if(r<.9)return"carrot";if(r<.97)return"pea";return"scallion"}
+function updateRecipeCard(){
+titleEl.textContent=currentRecipe.title
+descEl.innerHTML=`${currentRecipe.difficulty}挑戰｜${currentRecipe.cardLine1}<br>${currentRecipe.cardLine2}`
+best=getBest()
+bestEl.textContent=best
+}
+function recipeType(){
+let r=Math.random(),sum=0
+for(let item of currentRecipe.mix){
+sum+=item[1]
+if(r<=sum)return item[0]
+}
+return currentRecipe.mix[currentRecipe.mix.length-1][0]
+}
+function defaultTip(){
+return currentRecipe.tip
+}
+function renderStartMenu(){
+clearResultFx()
+menu.className="menu start-mode"
+menu.innerHTML=`<h1>卡通炒飯翻鍋</h1><div class="menu-sub">先選擇炒飯口味與難度</div><div class="dish-grid">${Object.values(recipes).map(recipe=>`<div class="dish-card ${recipe.key===currentRecipeKey?"active":""}" data-recipe="${recipe.key}"><div class="dish-main"><div class="dish-name">${recipe.name}</div><div class="dish-meta">${recipe.difficulty}｜${recipe.cardLine1}</div><div class="dish-note">${recipe.menuNote}</div></div><div class="dish-badge">${recipe.label}</div></div>`).join("")}</div><div class="selected-panel"><div class="recipe-pill">目前選擇：${currentRecipe.name}｜${currentRecipe.difficulty}</div><div class="selected-title">${currentRecipe.name}</div><div class="selected-text">${currentRecipe.menuNote}<br>這一種會出現不同的內容物與不同的掉飯難度。</div><div class="best-line">此口味最佳：${getBest()} 分</div></div><p>點鍋子讓炒飯整團翻起來，再自然落回鍋裡。</p><p>太久沒翻，飯會慢慢變黑燒焦。</p><p>超過 800 分開始會有不同等級的結束驚喜動畫。</p><div class="action-row"><button id="startBtn">開始遊戲</button></div>`
+overlay.style.display="grid"
+menu.scrollTop=0
+menu.querySelectorAll(".dish-card").forEach(card=>{
+card.addEventListener("click",()=>{
+currentRecipeKey=card.dataset.recipe
+currentRecipe=recipes[currentRecipeKey]
+updateRecipeCard()
+localStorage.setItem("friedRiceSelectedRecipe",currentRecipeKey)
+renderStartMenu()
+})
+})
+document.getElementById("startBtn").addEventListener("click",startGame)
+}
+function showSelectMenu(){
+running=false
+clearInterval(timer)
+cancelAnimationFrame(raf)
+updateRecipeCard()
+renderStartMenu()
+}
+function resetGame(){
+score=0
+lost=0
+timeLeft=30
+burn=0
+stability=84
+combo=0
+cooldown=0
+idleTime=0
+food=[]
+spills=[]
+stars=[]
+steam=[]
+flip={active:false,t:1,duration:.86,lift:0,angle:0,forward:0,shake:0,quality:"normal"}
+let total=Math.round(Math.max(95,Math.min(135,Math.floor(w/5.8)))*currentRecipe.foodScale)
+for(let i=0;i<total;i++)food.push(makeFood())
+for(let i=0;i<15;i++)steam.push(makeSteam())
+tipEl.textContent=defaultTip()
+updateUI()
+}
+function makeFood(){
+let p=randomFoodLocal(),type=recipeType()
+return{type:type,lx:p.x,ly:p.y,rot:rand(0,Math.PI*2),spin:rand(-2,2),size:type==="beef"?rand(.95,1.26):rand(.86,1.15),bounce:rand(0,Math.PI*2),face:type==="rice"&&Math.random()<.08}
+}
 function randomFoodLocal(){let a=rand(0,Math.PI*2),r=Math.sqrt(Math.random());return{x:Math.cos(a)*r*68,y:Math.sin(a)*r*20-5+Math.abs(Math.cos(a)*r)*5}}
 function makeSteam(){return{x:rand(-78,78),y:rand(-18,20),life:rand(0,1),speed:rand(.22,.48),bend:rand(-1,1)}}
 function updateUI(){scoreEl.textContent=Math.floor(score);lostEl.textContent=lost;timeEl.textContent=timeLeft;bestEl.textContent=best;burnEl.textContent=Math.floor(burn);barEl.style.width=stability+"%"}
-function startGame(){clearResultFx();menu.className="menu";overlay.style.display="none";running=true;resetGame();clearInterval(timer);timer=setInterval(()=>{if(!running)return;timeLeft--;updateUI();if(timeLeft<=0)endGame("timeup")},1000);lastTime=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function startGame(){
+clearResultFx()
+menu.className="menu"
+overlay.style.display="none"
+running=true
+updateRecipeCard()
+resetGame()
+clearInterval(timer)
+timer=setInterval(()=>{if(!running)return;timeLeft--;updateUI();if(timeLeft<=0)endGame("timeup")},1000)
+lastTime=performance.now()
+cancelAnimationFrame(raf)
+raf=requestAnimationFrame(loop)
+}
 function endGame(reason="timeup"){
 running=false
 clearInterval(timer)
@@ -183,7 +312,7 @@ cancelAnimationFrame(raf)
 let remain=food.length
 let rawScore=score+remain*2-lost*14-burn*3
 score=Math.max(0,Math.round(rawScore))
-if(score>best){best=score;localStorage.setItem("cartoonFriedRiceBest7",String(best))}
+if(score>best){best=score;saveBest(best)}
 updateUI()
 let title="遊戲結束"
 let rank="再練一下，下一次會更穩"
@@ -201,25 +330,25 @@ title="傳說成功"
 rank="1400 分突破，炒飯神話誕生"
 hero="金光爆發！整場最強表演"
 mode="legend"
-tier="宇宙炒飯王"
+tier="1400 分傳說突破"
 }else if(score>=1200){
 title="超級成功"
 rank="1200 分突破，星光等級的大秀"
 hero="煙火級收尾，整鍋都在發光"
 mode="rainbow"
-tier="星光主廚"
+tier="1200 分星光秀"
 }else if(score>=1000){
 title="華麗成功"
 rank="1000 分突破，皇冠等級的炒飯"
 hero="華麗節奏，氣勢全開"
 mode="royal"
-tier="皇冠名廚"
+tier="1000 分皇冠時刻"
 }else if(score>=800){
 title="炒飯成功"
 rank="800 分突破，做出完美炒飯"
 hero="漂亮收尾，驚喜正式登場"
 mode="gold"
-tier="完美炒飯"
+tier="800 分完美達成"
 }else if(score>=650&&lost<=10){
 rank="高級炒飯師，翻鍋很穩"
 hero="節奏超順，整體表現很亮眼"
@@ -237,24 +366,20 @@ tier="努力進步中"
 let specialBlock=""
 if(mode==="fail"){
 specialBlock='<div class="fail-stamp">燒 焦 失 敗</div>'
-}else if(mode==="legend"){
-specialBlock='<div class="score-hero">🌟 1400 分傳說突破 🌟</div><div class="perfect-art"><div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div><div class="rice-art"></div><div class="bowl"></div></div>'
-}else if(mode==="rainbow"){
-specialBlock='<div class="score-hero">🌈 1200 分星光秀 🌈</div><div class="perfect-art"><div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div><div class="rice-art"></div><div class="bowl"></div></div>'
-}else if(mode==="royal"){
-specialBlock='<div class="score-hero">👑 1000 分皇冠時刻 👑</div><div class="perfect-art"><div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div><div class="rice-art"></div><div class="bowl"></div></div>'
-}else if(mode==="gold"){
-specialBlock='<div class="score-hero">✨ 800 分完美達成 ✨</div><div class="perfect-art"><div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div><div class="rice-art"></div><div class="bowl"></div></div>'
+}else if(["legend","rainbow","royal","gold"].includes(mode)){
+specialBlock=`<div class="score-hero">${tier}</div><div class="perfect-art"><div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div><div class="rice-art"></div><div class="bowl"></div></div>`
 }else if(mode==="success"){
-specialBlock='<div class="score-hero">✨ '+tier+' ✨</div>'
+specialBlock=`<div class="score-hero">${tier}</div>`
 }else{
 specialBlock='<div class="score-hero">'+tier+'</div>'
 }
 menu.className='menu'+(mode!=="normal"?' '+mode+'-mode':'')
-menu.innerHTML=`<h1>${title}</h1><div class="result-hero">${hero}</div><p>${rank}</p>${specialBlock}<div class="result"><div>分數<span>${Math.floor(score)}</span></div><div>掉飯<span>${lost}</span></div><div>燒焦<span>${Math.floor(burn)}%</span></div><div>最佳<span>${best}</span></div></div><button id="againBtn">再玩一次</button>`
+menu.innerHTML=`<h1>${title}</h1><div class="recipe-pill">本次挑戰：${currentRecipe.name}｜${currentRecipe.difficulty}</div><div class="result-hero">${hero}</div><p>${rank}</p>${specialBlock}<div class="result"><div>分數<span>${Math.floor(score)}</span></div><div>掉飯<span>${lost}</span></div><div>燒焦<span>${Math.floor(burn)}%</span></div><div>最佳<span>${best}</span></div></div><div class="action-row"><button id="againBtn">再玩一次</button><button id="pickBtn" class="secondary-btn">換別種炒飯</button></div>`
 overlay.style.display="grid"
+menu.scrollTop=0
 launchResultFx(mode,tier)
 document.getElementById("againBtn").addEventListener("click",startGame)
+document.getElementById("pickBtn").addEventListener("click",showSelectMenu)
 }
 function showFlash(t){flash.textContent=t;flash.classList.remove("show");void flash.offsetWidth;flash.classList.add("show")}
 function clearResultFx(){resultFx.innerHTML=""}
@@ -383,27 +508,27 @@ lastTap=now
 idleTime=0
 burn=clamp(burn-4,0,100)
 let busy=flip.active&&flip.t<.72
-let tooFast=busy||cooldown>.06||gap<190
+let tooFast=busy||cooldown>.06||gap<currentRecipe.minGap
 let quality="normal"
 if(tooFast){
 quality="bad"
 combo=0
-stability=clamp(stability-8,0,100)
+stability=clamp(stability-currentRecipe.badPenalty,0,100)
 score+=4
 tipEl.textContent="太急了，可能會噴出幾粒飯"
 showFlash("慢一點！")
-}else if(gap>=330&&gap<=860||flip.t>.86){
+}else if(gap>=currentRecipe.perfectMin&&gap<=currentRecipe.perfectMax||flip.t>.86&&gap>currentRecipe.minGap+25){
 quality="perfect"
 combo++
-stability=clamp(stability+7,0,100)
-score+=22+Math.min(combo*3,24)
+stability=clamp(stability+currentRecipe.perfectGain,0,100)
+score+=currentRecipe.perfectScore+Math.min(combo*3,24)
 tipEl.textContent="時機漂亮，整團飯會回鍋"
 if(combo%3===0)showFlash("漂亮翻鍋！")
 }else{
 quality="good"
 combo=Math.max(1,combo)
-stability=clamp(stability+3,0,100)
-score+=12
+stability=clamp(stability+currentRecipe.goodGain,0,100)
+score+=currentRecipe.goodScore
 tipEl.textContent="不錯，穩穩翻比較安全"
 }
 startFlip(quality)
@@ -415,9 +540,10 @@ updateUI()
 function startFlip(q){flip.active=true;flip.t=0;flip.quality=q;flip.duration=q==="bad"?.74:q==="perfect"?.9:.86}
 function maybeSpill(q){
 let base=q==="bad"?.22:q==="perfect"?.004:.03
+base*=currentRecipe.spillBoost
 base+=(100-stability)/560
 if(Math.random()>base)return
-let amount=q==="bad"?Math.floor(rand(1,3)):1
+let amount=q==="bad"?Math.floor(rand(currentRecipe.key==="beef"?2:1,currentRecipe.key==="egg"?2.2:3)):1
 for(let i=0;i<amount;i++)throwOne()
 }
 function throwOne(){
@@ -437,16 +563,18 @@ for(let i=0;i<n;i++)stars.push({x:panX+rand(-70,70)*scale,y:panY-rand(28,70)*sca
 function loop(t){if(!running)return;let dt=Math.min(.026,(t-lastTime)/1000);lastTime=t;update(dt);draw();raf=requestAnimationFrame(loop)}
 function update(dt){
 layout()
+if(!currentRecipe)return
 cooldown=Math.max(0,cooldown-dt)
 idleTime+=dt
 if(idleTime>2.4){
-burn=clamp(burn+(idleTime>5?18:9)*dt,0,100)
-stability=clamp(stability-dt*1.1,0,100)
+burn=clamp(burn+(idleTime>5?18:9)*dt*currentRecipe.burnRate,0,100)
+stability=clamp(stability-dt*1.1*currentRecipe.drain,0,100)
 tipEl.textContent=burn>=100?"炒飯全黑了，挑戰失敗":"炒飯快燒焦了，快翻鍋！"
 }else{
-stability=clamp(stability-dt*.45,0,100)
+stability=clamp(stability-dt*.45*currentRecipe.drain,0,100)
 }
 if(burn>=100){
+burn=100
 updateUI()
 endGame("burned")
 return
@@ -701,6 +829,24 @@ ctx.beginPath()
 ctx.arc(0,0,5*size,0,Math.PI*2)
 ctx.fill()
 ctx.stroke()
+}else if(type==="beef"){
+ctx.fillStyle=dark?mix("#9b5b38","#17110d",char*.92):mix("#9b5b38","#6e391d",char*.38)
+ctx.strokeStyle=dark?"#000":"#6a381d"
+ctx.lineWidth=1.8
+ctx.beginPath()
+ctx.moveTo(-7*size,-3*size)
+ctx.quadraticCurveTo(-1*size,-8*size,7*size,-3*size)
+ctx.quadraticCurveTo(10*size,2*size,5*size,6*size)
+ctx.quadraticCurveTo(-1*size,8*size,-8*size,3*size)
+ctx.quadraticCurveTo(-10*size,-1*size,-7*size,-3*size)
+ctx.fill()
+ctx.stroke()
+ctx.strokeStyle=dark?mix("#d7ba9e","#222222",char*.65):"rgba(255,236,214,.65)"
+ctx.lineWidth=1
+ctx.beginPath()
+ctx.moveTo(-4*size,-1*size)
+ctx.lineTo(4*size,2*size)
+ctx.stroke()
 }else{
 ctx.strokeStyle=dark?mix("#3ca947","#111",char*.9):mix("#3ca947","#2f6b33",char*.4)
 ctx.lineWidth=3.2*size
@@ -768,7 +914,8 @@ ctx.closePath()
 }
 canvas.addEventListener("pointerdown",e=>{e.preventDefault();tapGame(e.clientX,e.clientY)})
 window.addEventListener("resize",resize)
-startBtn.addEventListener("click",startGame)
+updateRecipeCard()
+renderStartMenu()
 resize()
 draw()
 </script>
